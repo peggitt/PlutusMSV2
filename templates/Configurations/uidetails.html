@@ -1,0 +1,86 @@
+
+{% extends 'index.html' %}
+
+{% block content %}
+{% load static %}
+
+<script src="{% static 'assets/pjs/uidetails.js' %}"></script>
+<hr />
+
+		
+<div id="content" class="app-content">
+    <ul class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/home">Home</a></li>
+        <li class="breadcrumb-item"><a href="/ModuleConfig">Modules</a></li>
+        <li class="breadcrumb-item active">UI COnfigs</li>
+    </ul>
+    
+    <h1 class="page-header">
+        Configuration <small>Details</small>
+    </h1>
+
+    <div class="warning">
+    
+        {% if messages %}
+            {% for message in messages %}
+            {% if message.tags %} class="{{ message.tags }}"{% endif %}
+                {% if message.level == 50 %}
+                    <div class="alert alert-danger"><strong>Message:- </strong>{{ message }}</div>
+                {% endif %}
+                {% if message.level == 60 %}
+                    <div class="alert alert-success"><strong>Message:- </strong>{{ message }}</div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+        
+    </div>
+
+<form role="form"  method="post" action="." enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <input type="hidden" id="hdncsrf" name="hdncsrf" value="{{ csrf_token }}">
+    <input type="hidden" id="hdnId" name="hdnId" value="{{ ModuleId }}">
+
+		
+    <table class="table table-bordered table-striped datatable" id="table-2">
+        <thead>
+            <tr class="nk-tb-item nk-tb-head">
+                
+                <th class="nk-tb-col tb-col-mb"><span class="sub-text">Field</span></th>
+                <th class="nk-tb-col tb-col-mb"><span class="sub-text">Data Type</span></th>
+                <th class="nk-tb-col tb-col-md"><span class="sub-text">Mandatory</span></th>
+                <th class="nk-tb-col tb-col-md"><span class="sub-text">Caption</span></th>
+                <th class="nk-tb-col tb-col-md"><span class="sub-text">Question Order</span></th>
+                <th class="nk-tb-col tb-col-md"><span class="sub-text">Grid Item</span></th>
+                <th class="nk-tb-col tb-col-md"><span class="sub-text">Grid Order</span></th>
+                <th class="nk-tb-col tb-col-md"><span class="sub-text">Search</span></th>
+                <th class="nk-tb-col tb-col-md"><span class="sub-text">Search Procedure</span></th>
+                <th class="nk-tb-col tb-col-md"><span class="sub-text">Unique</span></th>
+                <th class="nk-tb-col tb-col-md"><span class="sub-text">AutoField</span></th>
+                <th class="nk-tb-col tb-col-md"><span class="sub-text">Function Event</span></th>
+                <th class="nk-tb-col tb-col-md"><span class="sub-text">Locked</span></th>
+                <th class="nk-tb-col tb-col-md"><span class="sub-text">Control Type</span></th>
+                </th>
+            </tr>
+        </thead>
+        
+        <tbody>
+        
+            
+            
+        
+            </tbody>
+            </table>
+
+            <p class="bs-example" style="text-align: right;">
+                <button type="button" class="btn btn-green btn-icon icon-left" onclick="btnUpdateForm();" id="btnUpdate">
+                    Update
+                    <i class="entypo-check"></i>
+                </button>
+            </p>
+    </form>   
+    </div>   
+
+
+
+{% endblock %}

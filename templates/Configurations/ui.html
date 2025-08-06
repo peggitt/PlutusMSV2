@@ -1,0 +1,113 @@
+
+{% extends 'index.html' %}
+
+{% block content %}
+{% load static %}
+
+<hr />
+
+		
+<!-- BEGIN #content -->
+<div id="content" class="app-content">
+    <ul class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/home">Home</a></li>
+        <li class="breadcrumb-item active">Modules</li>
+    </ul>
+    
+    <h1 class="page-header">
+        UI <small>Configurations...</small>
+    </h1>
+    
+    <p>
+        <div id="datatable" class="mb-5">
+            <div class="card">
+            <div class="card-body">
+               <table class="table" data-toggle="table"
+                data-sort-class="table-active"
+                data-sortable="true"
+                data-search="true"
+                data-pagination="true"
+                data-show-refresh="true"
+                data-show-columns="true">
+        <thead>
+            <tr>
+                <th>Main Module Name</th>
+                <th>Module Name</th>
+                <th>Can View</th>
+                <th>Can Add</th>
+                <th>Can Edit</th>
+                <th>Can Delete</th>
+                <th>Module Configured?</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        
+        <tbody>
+        
+            {% for data in Modules %}
+            <tr>
+                
+                <td>{{data.MenuName}}</td>
+                <td>{{data.ModuleName}}</td>
+                <td>
+                    <div class="checkbox checkbox-replace">
+                        <input type="checkbox" disabled="true" {% if  data.HasView == True %} checked {% endif %}>
+                    </div>
+                </td>
+                <td>
+                    <div class="checkbox checkbox-replace">
+                        <input type="checkbox" disabled="true" {% if  data.HasAdd == True %} checked {% endif %}>
+                    </div>
+                </td>
+                <td>
+                    <div class="checkbox checkbox-replace">
+                        <input type="checkbox" disabled="true" {% if  data.HasEdit == True %} checked {% endif %}>
+                    </div>
+                </td>
+                <td>
+                    <div class="checkbox checkbox-replace">
+                        <input type="checkbox" disabled="true" {% if  data.HasDelete == True %} checked {% endif %}>
+                    </div>
+                </td>
+                <td>
+                    <div class="checkbox checkbox-replace">
+                        <input type="checkbox" disabled="true" {% if  data.IsConfigured == True %} checked {% endif %}>
+                    </div>
+                </td>
+                <td>
+
+                    
+
+                    
+                    <a href="/ModuleConfig/{{data.id}}" class="btn btn-info btn-sm btn-icon icon-left">
+                        <i class="entypo-info"></i>
+                        Settings
+                    </a>
+                </td>
+            </tr>
+
+            {% endfor %}
+            
+        
+            </tbody>
+            </table>
+            </div>
+            <div class="card-arrow">
+                <div class="card-arrow-top-left"></div>
+                <div class="card-arrow-top-right"></div>
+                <div class="card-arrow-bottom-left"></div>
+                <div class="card-arrow-bottom-right"></div>
+            </div>
+        </div>
+    </div>
+    </p>
+</div>
+
+
+		
+
+
+
+
+
+{% endblock %}

@@ -1,0 +1,21 @@
+--Clear Entire Database and Tables:
+python manage.py flush
+--Initialize Database
+python manage.py migrate
+--Initialize Super User
+python manage.py createsuperuser
+--Initialize Bank Tables in SuperAdmin
+--Initialize Currencies in SuperAdmin
+--Initialize Branch Handling Setting: [1 SAMEDAY,2 NEXTDAY]
+--Initialize LOAN Branch Handling Setting: [1 SAMEDAY,2 NEXTDAY]
+--Initialize LOAN Branch Handling Setting: [1 SAMEDAY,2 NEXTDAY]
+--Run SystemCode Inserts File
+--Insert FrontEnd Admin User: Must be PlutusAdmin
+gAAAAABoXbhPHCmNMC5F3uF6lZifBOgOWeqz-RIUoIrEtUV55BlR8tg2_8FUeb1tVblB6KfZGCKh1KTUIBnhEMT4fhNbG13wzw==
+
+--Insert System Role for Admin
+--Add Created User to the System Role for the Created Branch:
+--Run Modules Inserts File
+--In Admin, Add admin user to Branch
+--Assign rights to System Users and role righs modules
+

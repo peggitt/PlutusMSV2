@@ -1,0 +1,271 @@
+
+{% extends 'index.html' %}
+
+{% block content %}
+{% load static %}
+	
+		
+		<!-- BEGIN #content -->
+		<div id="content" class="app-content p-0">
+            <div class="warning">
+  
+                {% if messages %}
+                    {% for message in messages %}
+                    {% if message.tags %} class="{{ message.tags }}"{% endif %}
+                        {% if message.level == 50 %}
+                            <div class="alert alert-danger"><strong>Message:- </strong>{{ message }}</div>
+                        {% endif %}
+                        {% if message.level == 60 %}
+                            <div class="alert alert-success"><strong>Message:- </strong>{{ message }}</div>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                
+            </div>
+
+            <form role="form"  method="post" action="." enctype="multipart/form-data">
+            {% csrf_token %}
+
+      
+
+            
+			<div class="app-content-inner-padding" data-scrollbar="true" data-height="100%" data-skip-mobile="true">
+                <div class="d-flex align-items-center mb-3">
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#">{{ MainModuleDescription }}</a></li>
+                    </ul>
+                    {% if ModuleRights.CanAdd %}
+                    <div class="ms-auto">
+                        <a href="#" onclick="clearAllControls('AddNew');"  data-bs-toggle="modal" data-bs-target="#modalDetail" class="btn btn-outline-theme"><i class="fa fa-plus-circle fa-fw me-1"></i> Add {{ MainModuleName }}</a>
+                    </div>
+                    {% endif %}
+                </div>
+				<hr class="mb-4">
+			
+			
+		
+				<div>
+					<!-- BEGIN #datatable -->
+                        <div id="datatable" class="mb-6">
+                            <h4>Module Description</h4>
+                            <p>DataTables is a plug-in for the jQuery Javascript library. It is a highly flexible tool, built upon the foundations of progressive enhancement, that adds all of these advanced features to any HTML table. Please read the <a href="https://datatables.net/" target="_blank">official documentation</a> for the full list of options.</p>
+                            <div class="card">
+                                <div class="card-body">
+                                    <table id="datatableDefault" class="table text-nowrap w-100">
+                                        <thead>
+                                            <tr>
+                                                {% for data in Fields %}
+                                                    <th>{{ data.questioncaption }}</th>
+                                                {% endfor %}
+                                                
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for row in Data %}
+                                                <tr>
+                                                    {% for column_name, value in row.items %}
+
+                                                    {% if column_name == "id" %}
+
+                                                    <td class="dropdown-green">
+
+                                                        <div class="btn-group">
+                                                            <button class="btn btn-outline-default dropdown-toggle rounded-0" type="button" data-bs-toggle="dropdown">
+                                                                <span class="d-none d-md-inline">Action</span>
+                                                                <span class="d-inline d-md-none"><i class="fa fa-credit-card"></i></span> &nbsp;
+                                                            </button>
+                                                            <div class="dropdown-menu">
+                                                                {% if ModuleRights.CanView %}
+                                                                    <a class="dropdown-item" href="#" onclick="ViewGlobal('ViewData','{{ value }}');"  data-bs-toggle="modal" data-bs-target="#modalDetail">View Details</a>
+                                                                {% endif %}
+                                                                
+                                                                {% if ModuleRights.CanEdit %}
+                                                                    <a class="dropdown-item" href="#" onclick="ViewGlobal('ViewEditData','{{ value }}');"  data-bs-toggle="modal" data-bs-target="#modalDetail">Edit Details</a>
+                                                                {% endif %}
+                                                            
+                                                                {# Add more actions as needed #}
+                                                                {% if ModuleRights.CanDelete %}
+                                                                    <div role="separator" class="dropdown-divider"></div>
+                                                                    <a class="dropdown-item text-danger" href="#" onclick="ViewGlobal('ViewDeleteData','{{ value }}');"  data-bs-toggle="modal" data-bs-target="#modalDetail">Delete</a>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+
+                                                        
+                                                    </td>
+                                                    {% elif value == False  %}
+                                                    <td class="py-1 align-middle"><span class="badge border border-warning text-warning px-2 pt-5px pb-5px rounded fs-12px d-inline-flex align-items-center"><i class="fa fa-circle fs-9px fa-fw me-5px"></i> {{ value }}</span></td>
+                                                    {% elif value == True  %}
+
+                                                    <td class="py-1 align-middle"><span class="badge border border-success text-success px-2 pt-5px pb-5px rounded fs-12px d-inline-flex align-items-center"><i class="fa fa-circle fs-9px fa-fw me-5px"></i> {{ value }}</span></td>
+                                                  
+                                                    {% else %}
+
+                                                    <td>{{ value }}</td>
+                                                    {% endif %}
+
+                                                    {% endfor %}
+                                                    
+                                                </tr>
+                                                {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="card-arrow">
+                                    <div class="card-arrow-top-left"></div>
+                                    <div class="card-arrow-top-right"></div>
+                                    <div class="card-arrow-bottom-left"></div>
+                                    <div class="card-arrow-bottom-right"></div>
+                                </div>
+                                <div class="hljs-container">
+                                    <pre><code class="xml" data-url="assets/data/table-plugins/code-1.json"></code></pre>
+                                </div>
+                            </div>
+                        </div>
+				</div>
+			</div>
+            </form>
+		</div>
+
+
+        <!-- BEGIN #modalDetail -->
+	<div class="modal fade" id="modalDetail">
+		<div class="modal-dialog" style="max-width: 600px">
+			<div class="modal-content">
+				<div class="modal-header py-2">
+					<h5 class="modal-title fs-16px">{{ MainModuleDescription }}</h5>
+					<button class="btn-close" data-bs-dismiss="modal"></button>
+				</div>
+				<div class="modal-body">
+					<div class="card">
+                        <div class="card-body pb-4">
+                            <form role="form"  method="post" action="." enctype="multipart/form-data" id="myForm">
+                                {% csrf_token %}
+
+                                <input type="hidden" id="hdncsrf" name="hdncsrf" value="{{ csrf_token }}">
+                                <input type="hidden" id="hdnId" name="hdnId" value="{{ MainModuleId }}">
+                                <input type="hidden" id="hdnActionTag" name="hdnActionTag" >
+
+                                <input type="hidden" id="HasView" name="HasView"  value="{{ ModuleRights.HasView }}">
+                                <input type="hidden" id="HasEdit" name="HasEdit"  value="{{ ModuleRights.HasEdit }}">
+                                <input type="hidden" id="HasDelete" name="HasDelete"  value="{{ ModuleRights.HasDelete }}">
+                                <input type="hidden" id="HasSupervise" name="HasSupervise"  value="{{ ModuleRights.HasSupervise }}">
+                                <input type="hidden" id="HasCREDITPOSTINGLIMIT" name="HasCREDITPOSTINGLIMIT"  value="{{ ModuleRights.HasCREDITPOSTINGLIMIT }}">
+                                <input type="hidden" id="HasCREDITSUPERVISIONLIMIT" name="HasCREDITSUPERVISIONLIMIT"  value="{{ ModuleRights.HasCREDITSUPERVISIONLIMIT }}">
+                                <input type="hidden" id="HasDEBITPOSTINGLIMIT" name="HasDEBITPOSTINGLIMIT"  value="{{ ModuleRights.HasDEBITPOSTINGLIMIT }}">
+                                <input type="hidden" id="HasEXCESSSUPERVISIONLIMIT" name="HasEXCESSSUPERVISIONLIMIT"  value="{{ ModuleRights.HasEXCESSSUPERVISIONLIMIT }}">
+                                <input type="hidden" id="CREDITPOSTINGLIMIT" name="CREDITPOSTINGLIMIT"  value="{{ ModuleRights.CREDITPOSTINGLIMIT }}">
+                                <input type="hidden" id="CREDITSUPERVISIONLIMIT" name="CREDITSUPERVISIONLIMIT"  value="{{ ModuleRights.CREDITSUPERVISIONLIMIT }}">
+                                <input type="hidden" id="DEBITPOSTINGLIMIT" name="DEBITPOSTINGLIMIT"  value="{{ ModuleRights.DEBITPOSTINGLIMIT }}">
+                                <input type="hidden" id="DEBITSUPERVISIONLIMIT" name="DEBITSUPERVISIONLIMIT"  value="{{ ModuleRights.DEBITSUPERVISIONLIMIT }}">
+
+                                <div class="row">
+                                    <div class="col-xl-12">
+                                        {% for data in Form %}
+                                            {% if  data.controltype == "Hidden" %}
+                                                <input type="hidden" id="{{ data.columnname }}" name="{{ data.columnname }}" >
+                                            {% endif %}
+
+                                            {% if  data.controltype == "TextBox" %}
+                                                <div class="form-group mb-3">
+                                                    <label class="form-label" for="{{ data.columnname }}" >{{ data.questioncaption }}</label>
+                                                    <input type="text" class="form-control" id="{{ data.columnname }}" name="{{ data.columnname }}"  placeholder="" onchange="{{ data.functionevent }}" {% if  data.ismandatory == True %} required {% endif %} {% if  data.islocked == True %} readonly {% endif %}/>
+                                                </div>
+                                            {% endif %}
+
+                                            {% if  data.controltype == "Integer" %}
+                                                <div class="form-group mb-3">
+                                                    <label class="form-label" for="{{ data.columnname }}" >{{ data.questioncaption }}</label>
+                                                    <input type="text" class="form-control" id="{{ data.columnname }}" name="{{ data.columnname }}"  placeholder="" onchange="{{ data.functionevent }}" {% if  data.ismandatory == True %} required {% endif %} {% if  data.islocked == True %} readonly {% endif %} oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
+                                                </div>
+                                            {% endif %}
+
+                                            {% if  data.controltype == "Numeric" %}
+                                                <div class="form-group mb-3">
+                                                    <label class="form-label" for="{{ data.columnname }}" >{{ data.questioncaption }}</label>
+                                                    <input type="text" class="form-control" id="{{ data.columnname }}" name="{{ data.columnname }}"  placeholder="" onchange="{{ data.functionevent }}" {% if  data.ismandatory == True %} required {% endif %} {% if  data.islocked == True %} readonly {% endif %} oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
+                                                </div>
+                                            {% endif %}
+
+
+                                            {% if  data.controltype == "Textarea" %}
+                                                <div class="form-group mb-3">
+                                                    <label class="form-label" for="{{ data.columnname }}" >{{ data.questioncaption }}</label>
+                                                    <textarea class="form-control" id="{{ data.columnname }}" name="{{ data.columnname }}" rows="3" placeholder="" onchange="{{ data.functionevent }}" {% if  data.ismandatory == True %} required {% endif %} {% if  data.islocked == True %} readonly {% endif %}></textarea>
+                                                </div>
+                                            {% endif %}
+
+
+                                            {% if  data.controltype == "DropDown" %}
+                                                <div class="form-group mb-3">
+                                                    <label class="form-label" for="{{ data.columnname }}" >{{ data.questioncaption }}</label>
+                                                    <select class="form-select" id="{{ data.columnname }}" name="{{ data.columnname }}" placeholder="" onchange="{{ data.functionevent }}" {% if  data.ismandatory == True %} required {% endif %} {% if  data.islocked == True %} readonly {% endif %}>
+                                                        <option label="Please Select"></option>
+                                                        {% for dataCombo in Combos %}
+                                                            {% if  data.columnname|slugify|add:"_id" == dataCombo.columnname|slugify %}
+                                                                <option value={{dataCombo.id|slugify}}>{{dataCombo.details}}</option>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            {% endif %}
+
+                                            {% if  data.controltype == "Bit" %}
+                                            <div class="form-group mb-3">
+                                                    <label for="{{ data.columnname }}" class="control-label">{{ data.questioncaption }}</label>
+                                                    <input class="form-check-input is-invalid" type="checkbox" value="" id="{{ data.columnname }}" name="{{ data.columnname }}"  placeholder="" onchange="{{ data.functionevent }}" {% if  data.ismandatory == True %} required {% endif %} {% if  data.islocked == True %} readonly {% endif %}>
+                                                </div>
+                                            {% endif %}
+
+                                        {% if  data.controltype == "Calendar" %}
+                                            
+                                                
+                                                <div class="form-group mb-3">
+                                                    <label for="{{ data.columnname }}" class="control-label">{{ data.questioncaption }}</label>
+
+                                                    <input type="date" pattern="\d{4}-\d{2}-\d{2}" class="form-control" id="{{ data.columnname }}" name="{{ data.columnname }}" placeholder="" onchange="{{ data.functionevent }}" {% if  data.ismandatory == True %} required {% endif %} {% if  data.islocked == True %} readonly {% endif %}>
+
+                                                </div>	
+                                                
+                                           
+                                        {% endif %}
+                                    {% endfor %}
+                                    </div>
+                                    
+                                </div>
+                            </form>
+                        </div>
+                        <div class="card-arrow">
+                            <div class="card-arrow-top-left"></div>
+                            <div class="card-arrow-top-right"></div>
+                            <div class="card-arrow-bottom-left"></div>
+                            <div class="card-arrow-bottom-right"></div>
+                        </div>
+                        <div class="hljs-container">
+                            <pre><code class="xml" data-url="assets/data/form-elements/code-1.json"></code></pre>
+                        </div>
+                    </div>
+				</div>
+				<div class="modal-footer">
+					<a href="#" data-bs-dismiss="modal" class="btn btn-outline-default w-100px">Cancel</a>
+                    
+                    {% if ModuleRights.CanSupervise %}
+                        {% if ModuleRights.CanView or ModuleRights.CanEdit %}
+                            <button type="button" class="btn btn-outline-yellow" id="btnSupervise" name="btnSupervise" onclick="btnGlobalMainSuperviseID()">Supervise</button>
+                        {% endif %}
+                    {% endif %}
+
+
+                    {% if ModuleRights.CanDelete %}
+                        <button type="button" class="btn btn-outline-danger" id="btnDelete" name="btnDelete" onclick="btnGlobalMainDeleteID()">Delete</button>
+                    {% endif %}
+
+
+                    <button type="button" class="btn btn-outline-lime" id="btnUpdate" name="btnUpdate" onclick="btnGlobalMainUpdateID()">Save Data</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- END #modalDetail -->
+
+{% endblock %}

@@ -1,0 +1,74 @@
+
+{% extends 'index.html' %}
+
+{% block content %}
+{% load static %}
+
+<hr />
+
+    
+	<!-- BEGIN #app -->
+	<div id="app" class="app app-full-height app-without-header">
+
+        
+		<!-- BEGIN error -->
+		<div class="error-page">
+			<!-- BEGIN error-page-content -->
+			<div class="error-page-content">
+
+                
+
+				<div class="card mb-5 mx-auto" style="max-width: 320px;">
+                    <div class="warning">
+    
+                        {% if messages %}
+                            {% for message in messages %}
+                            {% if message.tags %} class="{{ message.tags }}"{% endif %}
+                                {% if message.level == 50 %}
+                                    <div class="alert alert-danger"><strong>Message:- </strong>{{ message }}</div>
+                                {% endif %}
+                                {% if message.level == 60 %}
+                                    <div class="alert alert-success"><strong>Message:- </strong>{{ message }}</div>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                        
+                    </div>
+
+					<div class="card-body">
+						<div class="card">
+							<div class="error-code">404</div>
+							<div class="card-arrow">
+								<div class="card-arrow-top-left"></div>
+								<div class="card-arrow-top-right"></div>
+								<div class="card-arrow-bottom-left"></div>
+								<div class="card-arrow-bottom-right"></div>
+							</div>
+						</div>
+					</div>
+					<div class="card-arrow">
+						<div class="card-arrow-top-left"></div>
+						<div class="card-arrow-top-right"></div>
+						<div class="card-arrow-bottom-left"></div>
+						<div class="card-arrow-bottom-right"></div>
+					</div>
+				</div>
+				<h1>Oops!</h1> 
+				<h3>We can't seem to find have run into an issue.....</h3>
+				<hr>
+				<p class="mb-1">
+					Kindly contact the system administrator or try again later.:
+				</p>
+				
+				<a href="javascript:window.history.back();" class="btn btn-outline-theme px-3 rounded-pill"><i class="fa fa-arrow-left me-1 ms-n1"></i> Go Back</a>
+			</div>
+			<!-- END error-page-content -->
+		</div>
+		<!-- END error -->
+
+		
+		<!-- BEGIN btn-scroll-top -->
+		<a href="#" data-toggle="scroll-to-top" class="btn-scroll-top fade"><i class="fa fa-arrow-up"></i></a>
+		<!-- END btn-scroll-top -->
+	</div>
+{% endblock %}
