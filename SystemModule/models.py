@@ -23,6 +23,7 @@ class MainModule(models.Model):
     HasDelete = models.BooleanField(default=False)
     HasSupervise = models.BooleanField(default=False)
     HasMakerChecker = models.BooleanField(default=False)
+    MakerCheckerLevels =  models.IntegerField(default=2)
     HasWorkflow = models.BooleanField(default=False)
     HasMaxValues = models.BooleanField(default=False)
     HasCREDITPOSTINGLIMIT = models.BooleanField(default=False)
@@ -37,6 +38,15 @@ class MainModule(models.Model):
     IsMainModule = models.BooleanField(default=False)
     ParentModuleId =  models.CharField(max_length=200,default='',blank=True)
     IsSubModule = models.BooleanField(default=False)
+
+class MainModuleLogs(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    ModuleId = models.ForeignKey(MainModule, on_delete=models.CASCADE)
+    UserId = models.CharField(max_length=2000)
+    BranchId = models.CharField(max_length=2000)
+    ActionId = models.CharField(max_length=2000)
+    JsonString = models.TextField(blank=True, null=True)
+
 
 class ModuleRight(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

@@ -76,18 +76,30 @@
                                                             </button>
                                                             <div class="dropdown-menu">
                                                                 {% if ModuleRights.CanView %}
-                                                                    <a class="dropdown-item" href="#" onclick="ViewGlobal('ViewData','{{ value }}');"  data-bs-toggle="modal" data-bs-target="#modalDetail">View Details</a>
+                                                                    <a class="dropdown-item" href="#" onclick="ViewGlobal('ViewData','{{ value }}');"  data-bs-toggle="modal" data-bs-target="#modalDetail">View Record</a>
                                                                 {% endif %}
                                                                 
                                                                 {% if ModuleRights.CanEdit %}
-                                                                    <a class="dropdown-item" href="#" onclick="ViewGlobal('ViewEditData','{{ value }}');"  data-bs-toggle="modal" data-bs-target="#modalDetail">Edit Details</a>
+                                                                    <a class="dropdown-item" href="#" onclick="ViewGlobal('ViewEditData','{{ value }}');"  data-bs-toggle="modal" data-bs-target="#modalDetail">Edit Record</a>
+                                                                {% endif %}
+
+                                                                {% if ModuleRights.CanSupervise and not row.issupervised %}
+                                                                
+                                                                    <a class="dropdown-item text-warning" href="#" onclick="ViewGlobal('ViewSuperviseData','{{ value }}');"  data-bs-toggle="modal" data-bs-target="#modalDetail">Supervise Record </a>
                                                                 {% endif %}
                                                             
                                                                 {# Add more actions as needed #}
+                                                                
                                                                 {% if ModuleRights.CanDelete %}
                                                                     <div role="separator" class="dropdown-divider"></div>
-                                                                    <a class="dropdown-item text-danger" href="#" onclick="ViewGlobal('ViewDeleteData','{{ value }}');"  data-bs-toggle="modal" data-bs-target="#modalDetail">Delete</a>
+                                                                    <a class="dropdown-item" href="#" onclick="ViewGlobal('ViewDeleteData','{{ value }}');"  data-bs-toggle="modal" data-bs-target="#modalDetail">Delete</a>
                                                                 {% endif %}
+                                                                {% for submodulerow in submodules %}
+                                                                    {% if submodulerow.CanView %}
+                                                                        <div role="separator" class="dropdown-divider"></div>
+                                                                        <a class="dropdown-item" href="#" onclick="SubModuleView('ViewData','{{ value }}','{{ submodulerow.id }}');" >{{ submodulerow.ModuleName }}</a>
+                                                                    {% endif %}
+                                                                {% endfor %}
                                                             </div>
                                                         </div>
 
@@ -202,7 +214,7 @@
                                                     <select class="form-select" id="{{ data.columnname }}" name="{{ data.columnname }}" placeholder="" onchange="{{ data.functionevent }}" {% if  data.ismandatory == True %} required {% endif %} {% if  data.islocked == True %} readonly {% endif %}>
                                                         <option label="Please Select"></option>
                                                         {% for dataCombo in Combos %}
-                                                            {% if  data.columnname|slugify|add:"_id" == dataCombo.columnname|slugify %}
+                                                            {% if  data.columnname|slugify == dataCombo.columnname|slugify %}
                                                                 <option value={{dataCombo.id|slugify}}>{{dataCombo.details}}</option>
                                                             {% endif %}
                                                         {% endfor %}

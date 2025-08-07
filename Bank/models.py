@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils import timezone
-from SystemCode.models import BranchHolidayHandling,LoanHolidayHandling,BaseRateModule,InterestRateId,InterestRateType
+from SystemCode.models import BranchHolidayHandling,LoanHolidayHandling,BaseRateModule,InterestRateType
 from SystemCode.models import InterestRateCategory
 from Currency.models import TransactionCurrency
 from django.contrib.auth.models import User
@@ -75,24 +75,24 @@ class BaseRate(models.Model):
     BaseRate = models.FloatField(blank=True, null=True)
     EffectiveDate = models.DateField(default = timezone.now, blank=True ,null=True)
     UpdatedBy = models.CharField(max_length=2000)
-    UpdatedOn = models.DateField(default = timezone.now, blank=True ,null=True)
+    UpdatedOn = models.DateTimeField(default = timezone.now, blank=True ,null=True)
     SupervisedBy = models.CharField(max_length=2000,blank=True)
-    SupervisedOn = models.DateField(default = timezone.now, blank=True ,null=True)
+    SupervisedOn = models.DateTimeField(default = timezone.now, blank=True ,null=True)
     Checkers = models.IntegerField(default=0)
     IsSupervised = models.BooleanField(default=True)    
 
 class InterestRate(models.Model):
     Id = models.BigAutoField(primary_key=True)
-    RateId = models.ForeignKey(InterestRateId,on_delete=models.CASCADE)
+    RateName = models.CharField(max_length=2000,blank=True)
     RateType = models.ForeignKey(InterestRateType,on_delete=models.CASCADE)
     RateCategory = models.ForeignKey(InterestRateCategory,on_delete=models.CASCADE)
     CurrencyId = models.ForeignKey(TransactionCurrency,on_delete=models.CASCADE)
-    EffectiveFromDate = models.DateField(default = timezone.now, blank=True ,null=True)
-    EffectiveToDate = models.DateField(blank=True ,null=True)
+    EffectiveFromDate = models.DateTimeField(default = timezone.now, blank=True ,null=True)
+    EffectiveToDate = models.DateTimeField(blank=True ,null=True)
     SlabWise = models.BooleanField(default=True) 
     Remarks = models.CharField(max_length=2000,blank=True) 
     UpdatedBy = models.CharField(max_length=2000)
-    UpdatedOn = models.DateField(default = timezone.now, blank=True ,null=True)
+    UpdatedOn = models.DateTimeField(default = timezone.now, blank=True ,null=True)
     SupervisedBy = models.CharField(max_length=2000,blank=True)
     SupervisedOn = models.DateField(default = timezone.now, blank=True ,null=True)
     Checkers = models.IntegerField(default=0)

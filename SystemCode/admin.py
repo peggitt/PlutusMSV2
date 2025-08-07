@@ -21,7 +21,7 @@ from .models import FeeCalculatedOn,FeeChargeEvent,WorkflowModule,WorkflowDocume
 from .models import InterestType,DayCountBasis,InterestCalcBalanceType,BaseRateModule,BaseRateSpreadSign,CreditInterestCalcMethod
 from .models import DebitInterestCalcMethod,InterestRateCategory,InterestRateType,SystemUserType,AccountOperatingMode,YesNo
 from .models import CustomerType,ProductCategory,RoundingOption,FrequencyType,ProductType,Gender,LoanHolidayHandling
-from .models import InterestRateId
+
 
 admin.site.register(GroupTransferState)
 admin.site.register(GroupTransferType)
@@ -123,4 +123,4 @@ admin.site.register(FrequencyType)
 admin.site.register(ProductType)
 admin.site.register(Gender)
 admin.site.register(LoanHolidayHandling)
-admin.site.register(InterestRateId)
+

@@ -787,7 +787,7 @@ function clearAllControls(AnyAction) {
     }
 
     SetControlValue("hdnActionTag", AnyAction);
-    
+
     if(AnyAction === "AddNew")
     {
         const btnSupervise = document.getElementById('btnSupervise');
@@ -820,6 +820,9 @@ function clearAllControls(AnyAction) {
     if (btnDelete) btnDelete.style.display = 'block'; 
     if (btnUpdate) btnUpdate.style.display = 'block'; 
 
+    var hiddenModuleId = GetInputValue("hdnId");
+
+    ViewDataDetailsById(hiddenModuleId,Id);
 
     if(ActionTag === "ViewData")
     {
@@ -867,8 +870,82 @@ function clearAllControls(AnyAction) {
         }
 
     }
+    else if(ActionTag === "ViewSuperviseData")
+    {
+        clearAllControls("ViewSuperviseData");
+        if (btnDelete) {
+            btnDelete.style.display = 'none';
+
+        }
+        if (btnUpdate) {
+            btnUpdate.style.display = 'none';
+
+        }
+        
+
+    }
         
   }
+
+  function ViewDataDetailsById(ModuleId,value)
+{
+    clearAllControls();
+    LoadCollabInfo('Loading....');
+
+    //Load Controls and Current Rights
+    //var ModuleId = GetInputValue("hdnId");
+    var csrf = GetInputValue("hdncsrf");
+
+
+    jQuery.ajax({
+    type : "POST",
+    url: "/module/"+ModuleId+"/",
+    data: {
+        FormId: ModuleId,
+		Id: value,
+		ActionID: "viewData",
+        csrfmiddlewaretoken: csrf,
+        dataType: "json",
+
+    },
+        success: function(response)
+        {
+            if(response!=="[]" && response!=="")
+            {
+
+                var jSonSession= response.returnDetails;
+                myControls = response.returnFormDetails;
+                if(jSonSession!=="")
+                {
+
+                    for (var j = 0; j < response.returnFormDetails.length; j++) {
+                        {
+                            try {
+                                ControlName=response.returnFormDetails[j].columnname;
+                                var ControlNameLower =  ControlName.toLowerCase();
+                                SetControlValue(ControlName,eval('jSonSession[0].'+ControlNameLower));
+                                
+                            } catch (error) {
+                        
+                            }
+                        }
+                    
+                    
+                    
+                    }
+                    LoadCollabInfo('Data Loaded.');
+                }
+                
+            }else
+            {
+                LoadCollabError(request.responseText);
+            }
+        },
+        error: function (request, status, error) {
+            LoadCollabError(request.responseText);
+        }
+    });
+}
 
   
 
@@ -1100,6 +1177,37 @@ function populateControls(formId) {
 
 
 function btnGlobalMainUpdateID()
+{
+    var ModuleId = GetInputValue("hdnId");
+    var ActionTag = GetInputValue("hdnActionTag");
+    var csrf = GetInputValue("hdncsrf");
+
+    if (isGlobalValid()===true) {
+        //DisableControl('btnUpdate');
+
+        $.ajax({
+        type : "POST",
+        url: "/module/"+ModuleId+"/",
+        data: $("form").serialize()+'&ActionID='+ActionTag+'&ModuleId='+ModuleId,
+            success: function(response) {
+            if(response!=="[]" && response!=="") {
+                var jSonSessionData= response.returnDetails;
+                LoadCollabSuccess('Information updated successfully!');
+                //btnCloseID();
+                location.reload();
+            }else {
+                LoadCollabSuccess('Information updated successfully!');
+                }
+            },
+                error: function (request, status, error) {
+                LoadCollabError(request.responseText);
+                //EnableControl('btnUpdate');
+            }
+        });
+	}
+}
+
+function btnGlobalMainSuperviseID()
 {
     var ModuleId = GetInputValue("hdnId");
     var ActionTag = GetInputValue("hdnActionTag");

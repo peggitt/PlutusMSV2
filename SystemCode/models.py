@@ -64,12 +64,6 @@ class SystemUserType(models.Model):
     CodeIdLanguage2 = models.CharField(max_length=4000,blank=False)
     CodeIdLanguage3 = models.CharField(max_length=4000,blank=False)
 
-class InterestRateId(models.Model):
-    id = models.IntegerField(primary_key=True, verbose_name='ID', help_text='Unique identifier')
-    CodeId = models.CharField(max_length=4000,blank=False)
-    CodeIdLanguage1 = models.CharField(max_length=4000,blank=False)
-    CodeIdLanguage2 = models.CharField(max_length=4000,blank=False)
-    CodeIdLanguage3 = models.CharField(max_length=4000,blank=False)
 
 class InterestRateType(models.Model):
     id = models.IntegerField(primary_key=True, verbose_name='ID', help_text='Unique identifier')

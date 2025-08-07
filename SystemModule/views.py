@@ -184,7 +184,7 @@ def UIModule_view(request, *args, **kwargs):
                 UserName = UserLog
                 Activity = request.POST.get('ActionID', None)
                 ModuleId = request.POST.get('hdnId', None)
-
+                
 
                 if Activity=='viewData':
                     EndPointEnv= Configs.ENDPOINTEnvironment
@@ -217,23 +217,17 @@ def UIModule_view(request, *args, **kwargs):
                         else:
                             return JsonResponse({"Exception": resJSon['detail']}, status=404)
                         
-                elif Activity=='updateFormData':
-                    #print('Here')
+                elif Activity=='ViewEditData':
+                    print('Here on Update')
                     EndPointEnv= Configs.ENDPOINTEnvironment
                     MainEndpoint = Endpoint.objects.filter(EndpointKey='Core'+EndPointEnv).values('Address')
                     Endpointaddress = MainEndpoint[0]['Address']+'ModuleConfigsDefaultUserPostData_'+ModuleId
                     #print(Endpointaddress)
                     form_data = request.POST.dict()
-                    
-                    if "AccessAllowed" not in form_data:
-                        form_data["AccessAllowed"] = ""
-
-                    if "AccessLocked" not in form_data:
-                        form_data["AccessLocked"] = ""
-
-                    
+                    #print(form_data)
                     # Convert the form data to JSON
                     json_data = json.dumps(form_data)
+                    #print(json_data)
 
                     MainModuleId = request.POST.get('hdnId', None)
 
@@ -260,6 +254,45 @@ def UIModule_view(request, *args, **kwargs):
                             return JsonResponse(resJSon)
                         else:
                             return JsonResponse({"Exception": resJSon['detail']}, status=404)
+                        
+                elif Activity=='ViewSuperviseData':
+                    print('Here on Supervise')
+                    EndPointEnv= Configs.ENDPOINTEnvironment
+                    MainEndpoint = Endpoint.objects.filter(EndpointKey='Core'+EndPointEnv).values('Address')
+                    Endpointaddress = MainEndpoint[0]['Address']+'ModuleConfigsDefaultUserPostData_'+ModuleId
+                    #print(Endpointaddress)
+                    form_data = request.POST.dict()
+                    #print(form_data)
+                    # Convert the form data to JSON
+                    json_data = json.dumps(form_data)
+                    #print(json_data)
+
+                    MainModuleId = request.POST.get('hdnId', None)
+
+                    payload = json.dumps({
+                    "UserName":UserLog,
+                    "ModuleId":MainModuleId,
+                    "JsonData":json_data
+                    })
+                    headers = {
+                        'Authorization': 'Bearer '+CollabLog
+                    }
+
+                    #print(payload)
+                    
+                    response = requests.request("PUT", Endpointaddress, headers=headers, data=payload)
+                    if(response.status_code==403 or response.status_code==404 or response.status_code==401 or response.status_code==422 or response.status_code==500 or response.status_code==405):
+                        resText= response.text
+                        resJSon=json.loads(resText)
+                        return JsonResponse({"Exception": resJSon['detail']}, status=response.status_code)
+                    elif(response.status_code==201):
+                        resText= response.text 
+                        resJSon=json.loads(resText)
+                        if(resJSon['status']==202):
+                            return JsonResponse(resJSon)
+                        else:
+                            return JsonResponse({"Exception": resJSon['detail']}, status=404)
+                
                         
                 elif Activity=='AddNew':
                     EndPointEnv= Configs.ENDPOINTEnvironment
@@ -368,14 +401,24 @@ def UIModule_view(request, *args, **kwargs):
                         #Get Rights for the Module
 
                         modules = request.session.get('Modules', [])
-    
+                        
+                        
                         # Find the module with matching id
                         moduleRights = next((m for m in modules if m['id'] == MainModuleId), None)
                         #print(moduleRights)
+                        
+                        submodules = [
+                            module for module in modules 
+                            if module.get('ParentModuleId') == MainModuleId 
+                            and module.get('IsSubModule', False)
+                        ]
+                        
+                        #print(submodules,'SUBS')
+
 
                         return render(request,ModuleFolder+"/"+MainModuleId+".html",{"MainModuleId":MainModuleId,"MainModuleName":MainModuleName,"MainModuleDescription":MainModuleDescription,
                                                                   "Fields":returnGridDetails,"Form":returnFormDetails,"Data":returnDataDetails,"Combos":returnComboDetails,
-                                                                  "ModuleRights":moduleRights})
+                                                                  "ModuleRights":moduleRights,"submodules":submodules})
                     else:
                         messages.add_message(request, 50, 'Error')
                         return render(request,"Shared/main.html",{})
@@ -390,4 +433,6 @@ def UIModule_view(request, *args, **kwargs):
             else:
                 print(eString)
                 messages.add_message(eString, 50, 'Error')
-                return render(request,"Shared/main.html",{})
+                return render(request,"Shared/main.html",{})           
+
+    

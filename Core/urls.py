@@ -34,6 +34,7 @@ urlpatterns = [
 
     path('module/<str>/', UIModule_view, name='loginuser'),
 
+
     path('module/<str>/login/', public_login, name='loginuser'),
 
     
